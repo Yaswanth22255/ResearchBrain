@@ -30,7 +30,7 @@ const LandingPage = () => {
           <div className="bg-black text-white p-2 rounded-lg group-hover:bg-neutral-800 transition-colors">
             <BookOpen className="h-5 w-5" />
           </div>
-          <span className="font-bold text-lg text-black tracking-tight">ResearchPro</span>
+          <span className="font-bold text-lg text-black tracking-tight">ResearchBrain</span>
           <span className="text-[11px] font-semibold text-neutral-500 uppercase tracking-widest px-2 py-0.5 border border-neutral-300 rounded bg-white">
             Intelligence
           </span>
@@ -428,7 +428,7 @@ const LandingPage = () => {
             <div className="p-1 rounded bg-black text-white">
               <BookOpen className="h-4 w-4" />
             </div>
-            <span className="font-bold text-neutral-900 text-sm">ResearchPro</span>
+            <span className="font-bold text-neutral-900 text-sm">ResearchBrain</span>
             <span className="text-neutral-300">|</span>
             <span>Academic Research Intelligence Platform</span>
           </div>

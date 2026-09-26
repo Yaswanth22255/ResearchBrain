@@ -14,7 +14,7 @@ const NotFound = () => {
           <div className="bg-black text-white p-2 rounded-lg">
             <BookOpen className="h-4 w-4" />
           </div>
-          <span className="font-bold text-base text-black tracking-tight">ResearchPro</span>
+          <span className="font-bold text-base text-black tracking-tight">ResearchBrain</span>
         </Link>
       </header>
 
@@ -46,7 +46,7 @@ const NotFound = () => {
       </main>
 
       <footer className="relative z-10 py-6 text-center text-xs text-neutral-400">
-        ResearchPro Academic Intelligence Platform
+        ResearchBrain Academic Intelligence Platform
       </footer>
     </div>
   );

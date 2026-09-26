@@ -15,7 +15,7 @@ export const AuthLayout = ({ children, title, subtitle }) => {
           <div className="bg-black text-white p-2 rounded-lg group-hover:bg-neutral-800 transition-colors">
             <BookOpen className="h-4 w-4" />
           </div>
-          <span className="font-bold text-base text-black tracking-tight">ResearchPro</span>
+          <span className="font-bold text-base text-black tracking-tight">ResearchBrain</span>
           <span className="text-[10px] font-semibold text-neutral-500 uppercase tracking-widest px-2 py-0.5 border border-neutral-300 rounded bg-white">
             Academic Identity
           </span>

@@ -186,7 +186,7 @@ const Login = () => {
       </form>
 
       <div className="mt-6 text-center text-xs text-neutral-500 border-t border-neutral-100 pt-4">
-        <span>New to ResearchPro? </span>
+        <span>New to ResearchBrain? </span>
         <Link
           to="/register"
           className="font-bold text-black hover:underline"

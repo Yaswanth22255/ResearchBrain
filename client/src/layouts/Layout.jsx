@@ -66,7 +66,7 @@ const Layout = () => {
               <BookOpen className="h-4 w-4" />
             </div>
             <span className="font-bold text-base tracking-tight text-neutral-900 group-hover:text-black transition-colors">
-              ResearchPro
+              ResearchBrain
             </span>
             <span className="ml-2 text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-600 border border-neutral-200">
               Academic
