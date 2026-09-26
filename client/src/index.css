@@ -1,13 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-bg-hover: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --glass-border-hover: rgba(255, 255, 255, 0.7);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-  --glass-blur: blur(12px);
-  --glass-radius: 16px;
+  --color-white: #ffffff;
+  --color-background: #fafafa;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f5f5;
+
+  --color-black: #000000;
+  --color-text: #171717;
+  --color-text-secondary: #525252;
+  --color-text-muted: #737373;
+
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.16);
+  --color-border-strong: rgba(0, 0, 0, 0.22);
+
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-bg-hover: rgba(255, 255, 255, 0.96);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-border-hover: rgba(0, 0, 0, 0.18);
+  --glass-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.04);
+  --glass-shadow-lg: 0 12px 32px 0 rgba(0, 0, 0, 0.08);
+  --glass-blur: blur(16px);
+  --glass-radius: 14px;
 }
 
 body {
@@ -17,12 +32,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc;
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.08), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.08), transparent 25%);
+  background-color: #fafafa;
+  background-image: radial-gradient(circle at 50% 0%, #ffffff 0%, #fafafa 50%, #f5f5f5 100%);
   background-attachment: fixed;
-  color: #0f172a;
+  color: #171717;
 }
 
 .glass-panel {
@@ -35,41 +48,41 @@ body {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.05);
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.03);
   border-radius: 12px;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.98);
   border-color: var(--glass-border-hover);
-  box-shadow: 0 8px 24px 0 rgba(31, 38, 135, 0.08);
+  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.07);
   transform: translateY(-2px);
 }
 
 .glass-nav {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 /* Hide scrollbar for clean UI */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.5);
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(107, 114, 128, 0.8);
+  background: rgba(0, 0, 0, 0.3);
 }

@@ -32,71 +32,93 @@ const Layout = () => {
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Glass Sidebar */}
-      <div className="w-64 flex-shrink-0 flex flex-col glass-panel !rounded-none !border-t-0 !border-b-0 !border-l-0 z-10 relative shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
-        <div className="h-16 flex items-center px-6 border-b border-gray-200/50">
-          <BookOpen className="h-6 w-6 text-indigo-600 mr-2" />
-          <Link to="/" className="font-bold text-lg text-gray-900 hover:text-indigo-700 transition-colors">ResearchBrain</Link>
+    <div className="flex h-screen overflow-hidden bg-[#fafafa]">
+      {/* Sleek Monochrome Sidebar */}
+      <div className="w-64 flex-shrink-0 flex flex-col glass-panel !rounded-none !border-t-0 !border-b-0 !border-l-0 z-10 relative bg-white/90 border-r border-neutral-200">
+        <div className="h-16 flex items-center px-6 border-b border-neutral-200">
+          <div className="p-1.5 rounded-lg bg-black text-white mr-2.5">
+            <BookOpen className="h-4 w-4" />
+          </div>
+          <Link to="/" className="font-bold text-base tracking-tight text-neutral-900 hover:text-black transition-colors">
+            ResearchPro
+          </Link>
+          <span className="ml-2 text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-600 border border-neutral-200">
+            Academic
+          </span>
         </div>
         
         {activeProject && (
-          <div className="p-4 border-b border-gray-200/50 bg-indigo-50/30">
-            <div className="text-xs font-semibold text-indigo-600 uppercase tracking-wider mb-1">Active Project</div>
-            <div className="text-sm font-medium text-gray-800 truncate" title={activeProject.name}>
+          <div className="p-4 border-b border-neutral-200 bg-neutral-50/80">
+            <div className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mb-1">
+              Active Project
+            </div>
+            <div className="text-sm font-semibold text-neutral-900 truncate" title={activeProject.name}>
               {activeProject.name}
+            </div>
+            <div className="text-xs text-neutral-500 mt-0.5 truncate">
+              {activeProject.domain}
             </div>
             <button 
               onClick={() => { localStorage.removeItem('activeProjectId'); setActiveProject(null); navigate('/app'); }}
-              className="text-xs text-gray-500 hover:text-red-500 mt-2 flex items-center"
+              className="text-xs text-neutral-500 hover:text-black mt-2 flex items-center font-medium transition-colors"
             >
               <ChevronLeft className="w-3 h-3 mr-1" /> Switch Project
             </button>
           </div>
         )}
 
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link 
                 key={item.name}
                 to={item.path} 
-                className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                   isActive 
-                    ? 'bg-indigo-600/10 text-indigo-700' 
-                    : 'text-gray-700 hover:bg-white/60 hover:text-gray-900'
+                    ? 'bg-black text-white shadow-xs' 
+                    : 'text-neutral-700 hover:bg-neutral-100 hover:text-neutral-950'
                 }`}
               >
-                <item.icon className={`h-5 w-5 mr-3 ${isActive ? 'text-indigo-600' : 'text-gray-400'}`} />
+                <item.icon className={`h-4 w-4 mr-3 ${isActive ? 'text-white' : 'text-neutral-500'}`} />
                 {item.name}
               </Link>
-            )
+            );
           })}
         </nav>
         
-        <div className="p-4 border-t border-gray-200/50">
-          <button className="flex items-center px-3 py-2 w-full rounded-lg text-sm font-medium text-gray-700 hover:bg-white/60 transition-colors">
-            <Settings className="h-5 w-5 mr-3 text-gray-400" />
-            Settings
-          </button>
+        <div className="p-3 border-t border-neutral-200">
+          <div className="px-3 py-2 text-xs text-neutral-500 font-medium flex items-center justify-between">
+            <span>Audit Level</span>
+            <span className="font-semibold text-neutral-800">Formal v2.1</span>
+          </div>
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 bg-transparent relative">
-        <header className="h-16 flex-shrink-0 glass-nav flex items-center justify-between px-8 z-10">
-          <h2 className="text-lg font-semibold text-gray-800">
-            {navItems.find(i => i.path === location.pathname)?.name || 'Workspace'}
-          </h2>
+        <header className="h-16 flex-shrink-0 glass-nav flex items-center justify-between px-8 z-10 border-b border-neutral-200">
+          <div className="flex items-center space-x-3">
+            <h2 className="text-base font-bold text-neutral-900">
+              {navItems.find(i => i.path === location.pathname)?.name || 'Workspace'}
+            </h2>
+            <span className="text-neutral-300">/</span>
+            <span className="text-xs font-medium text-neutral-500">Evidence-Grounded Intelligence</span>
+          </div>
           <div className="flex items-center space-x-4">
-             <div className="h-8 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-sm shadow-sm cursor-pointer">
-               U
-             </div>
+            <Link 
+              to="/app/discover" 
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-50 transition-colors"
+            >
+              Quick Search
+            </Link>
+            <div className="h-8 w-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs tracking-wider border border-black shadow-xs">
+              RP
+            </div>
           </div>
         </header>
         
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 relative z-0">
+        <main className="flex-1 overflow-y-auto p-6 md:p-10 relative z-0">
           <Outlet />
         </main>
       </div>

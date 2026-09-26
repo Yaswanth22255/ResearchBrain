@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FileText, Lightbulb, AlertCircle, Quote, FolderOpen, ArrowRight, CheckCircle } from 'lucide-react';
+import { FileText, Lightbulb, AlertCircle, Quote, FolderOpen, ArrowRight, ShieldCheck, CheckCircle } from 'lucide-react';
 import { GlassCard } from '../components/glass/GlassCard';
 import { GlassPanel } from '../components/glass/GlassPanel';
 import { GlassButton } from '../components/glass/GlassButton';
@@ -23,8 +23,8 @@ const Ideation = () => {
     setLoading(true);
     try {
       const { data } = await api.post('/summaries', {
-        query: query || 'Identify the main themes and research gaps in this literature.',
-        paperIds: papers.map(p => p._id).filter(id => id) // Only use papers saved to DB
+        query: query || 'Identify empirical consensus, structural limitations, and open research gaps.',
+        paperIds: papers.map(p => p._id).filter(id => id)
       });
       setSummaryData(data);
     } catch (error) {
@@ -36,150 +36,229 @@ const Ideation = () => {
   };
   
   const generateIdeas = () => {
-      setGeneratingIdeas(true);
-      setTimeout(() => {
-          setIdeas([
-              { title: "Neuro-Symbolic Approaches to Hallucination Mitigation", gap: "Lack of deterministic verification in LLM factual output.", question: "How can symbolic logic rules be effectively integrated with LLM embedding spaces to deterministically verify claims?" },
-              { title: "Cross-Domain Knowledge Transfer in Low-Resource Settings", gap: "Models fine-tuned on one domain fail catastrophically on distant domains.", question: "What is the optimal layer freezing strategy for preserving general capabilities while adapting to highly specialized domains?" }
-          ]);
-          setGeneratingIdeas(false);
-      }, 1500);
-  }
+    setGeneratingIdeas(true);
+    setTimeout(() => {
+      setIdeas([
+        { 
+          title: "Deterministic Neuro-Symbolic Verification in Large Models", 
+          gap: "Absence of real-time formal verification mechanisms for factual claims in generative models.", 
+          question: "How can symbolic ontology constraints be evaluated at inference time to prevent factual hallucinations without degrading generation fluency?" 
+        },
+        { 
+          title: "Cross-Domain Generalization in Low-Resource Scientific Literature", 
+          gap: "Fine-tuned models fail to generalize across disparate biomedical ontologies.", 
+          question: "What parameter-efficient adapter architectures maintain cross-ontology consistency during continual pre-training?" 
+        }
+      ]);
+      setGeneratingIdeas(false);
+    }, 1200);
+  };
 
   if (papers.length === 0) {
     return (
-      <GlassPanel className="text-center py-16 max-w-2xl mx-auto mt-10">
-        <FolderOpen className="mx-auto h-12 w-12 text-indigo-300 mb-4" />
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Ideation Workspace Empty</h2>
-        <p className="text-gray-600 mb-6">Select literature from the Discovery or Explorer pages to begin ideation.</p>
-        <GlassButton variant="primary" onClick={() => navigate('/app/discover')}>Go to Discovery</GlassButton>
+      <GlassPanel className="text-center py-16 max-w-2xl mx-auto mt-10 bg-white border border-neutral-200">
+        <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mx-auto mb-4 border border-neutral-200">
+          <FolderOpen className="h-6 w-6 text-neutral-600" />
+        </div>
+        <h2 className="text-xl font-bold text-black mb-2">Ideation Workspace Empty</h2>
+        <p className="text-sm text-neutral-500 mb-6">
+          To extract grounded evidence and brainstorm hypotheses, select publications from the Discovery search first.
+        </p>
+        <GlassButton variant="primary" onClick={() => navigate('/app/discover')}>
+          Go to Discovery Search
+        </GlassButton>
       </GlassPanel>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto pb-12">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2 text-amber-500" />
-            Ideation Workspace
-        </h1>
-        <p className="text-gray-500">Analyze literature, extract evidence, identify gaps, and generate novel research ideas.</p>
+    <div className="max-w-6xl mx-auto pb-16">
+      {/* Top Header */}
+      <div className="pb-6 mb-8 border-b border-neutral-200">
+        <div className="flex items-center space-x-2">
+          <div className="p-1.5 rounded bg-black text-white">
+            <Lightbulb className="w-4 h-4" />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight text-black">
+            Ideation & Grounded Analysis Workspace
+          </h1>
+        </div>
+        <p className="text-sm text-neutral-500 mt-1">
+          Extract empirical claims from {papers.length} selected publications, identify research gaps, and formulate novel research directions.
+        </p>
       </div>
       
-      <GlassPanel className="mb-8 p-6">
-        <h2 className="text-lg font-bold text-slate-900 mb-4">Grounded Literature Analysis</h2>
-        <p className="text-sm text-gray-600 mb-4">Ask a question about the {papers.length} selected papers to generate a grounded analysis.</p>
+      {/* Query / Analysis Generation Panel */}
+      <div className="mb-8 p-6 bg-white rounded-xl border border-neutral-200 shadow-2xs">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-sm font-bold text-black uppercase tracking-wider">
+            Grounded Literature Synthesis Query
+          </h2>
+          <span className="text-xs text-neutral-500">
+            {papers.length} publications staged
+          </span>
+        </div>
         
         <textarea
-          className="w-full border border-gray-200 rounded-xl p-4 mb-4 bg-white/70 shadow-inner focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+          className="w-full border border-neutral-300 rounded-lg p-3.5 mb-4 text-sm text-black placeholder-neutral-400 bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all leading-relaxed"
           rows="3"
-          placeholder="e.g. What are the main limitations identified across these papers?"
+          placeholder="e.g. What are the key empirical contradictions and methodological limitations identified across this literature?"
           value={query}
           onChange={e => setQuery(e.target.value)}
-        ></textarea>
+        />
         
         <div className="flex justify-end">
-            <GlassButton 
-              variant="primary"
-              onClick={generateSummary}
-              disabled={loading}
-              className="py-2.5 px-6"
-            >
-              {loading ? (
-                  <span className="flex items-center"><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div> Analyzing...</span>
-              ) : 'Generate Grounded Analysis'}
-            </GlassButton>
+          <GlassButton 
+            variant="primary"
+            onClick={generateSummary}
+            disabled={loading}
+            className="py-2.5 px-6"
+          >
+            {loading ? (
+              <span className="flex items-center">
+                <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div> 
+                Synthesizing Literature...
+              </span>
+            ) : 'Generate Grounded Synthesis'}
+          </GlassButton>
         </div>
-      </GlassPanel>
+      </div>
 
       {summaryData && (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <GlassPanel className="p-8 border-t-4 border-t-indigo-500">
-            <h3 className="text-xl font-bold flex items-center mb-4 text-gray-900">
-              <FileText className="h-5 w-5 mr-2 text-indigo-600" />
-              Analysis Summary
-            </h3>
-            <p className="text-gray-800 leading-relaxed text-lg whitespace-pre-wrap">{summaryData.summary}</p>
-          </GlassPanel>
+        <div className="space-y-8">
+          {/* Structured Analysis Summary */}
+          <div className="p-8 bg-white rounded-xl border border-neutral-300 shadow-2xs">
+            <div className="flex items-center space-x-2 mb-4 pb-3 border-b border-neutral-100">
+              <FileText className="h-4 w-4 text-black" />
+              <h3 className="text-base font-bold text-black uppercase tracking-wider">
+                Literature Synthesis Summary
+              </h3>
+            </div>
+            <p className="text-neutral-800 leading-relaxed text-sm whitespace-pre-wrap font-sans">
+              {summaryData.summary}
+            </p>
+          </div>
           
+          {/* Extracted Claims and Evidence */}
           <div>
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-gray-900">Extracted Claims & Evidence</h3>
-                <GlassButton 
-                  variant="secondary"
-                  onClick={() => navigate('/app/verification', { state: { claims: summaryData.claims, papers } })}
-                  className="text-green-700 border-green-200 hover:bg-green-50"
-                >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Verify All Claims
-                </GlassButton>
+              <div>
+                <h3 className="text-base font-bold text-black uppercase tracking-wider">
+                  Extracted Claims & Bibliographic Citations
+                </h3>
+                <p className="text-xs text-neutral-500">
+                  Individual empirical assertions extracted for formal verification.
+                </p>
+              </div>
+              <GlassButton 
+                variant="primary"
+                onClick={() => navigate('/app/verification', { state: { claims: summaryData.claims, papers } })}
+                className="text-xs"
+              >
+                <ShieldCheck className="w-4 h-4 mr-1.5" />
+                Audit & Verify Claims
+              </GlassButton>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {summaryData.claims?.map((claim, idx) => (
-                <GlassCard key={idx} className="flex flex-col h-full bg-white/60">
-                    <p className="font-bold text-gray-900 mb-4 text-base leading-snug">"{claim.claim}"</p>
-                    
-                    <div className="mt-auto pt-4 border-t border-gray-100">
-                        <div className="flex items-start text-sm text-gray-600 bg-gray-50/80 p-3 rounded-lg border border-gray-100 mb-3">
-                            <Quote className="w-4 h-4 text-indigo-400 mr-2 flex-shrink-0 mt-0.5" />
-                            <span className="italic line-clamp-3">"{claim.evidence || 'Evidence passage extracted from source document.'}"</span>
-                        </div>
-                        
-                        <div className="flex items-center justify-between text-xs">
-                            <div className="flex items-center">
-                                {claim.citationIds?.length > 0 ? (
-                                <span className="text-indigo-600 font-medium bg-indigo-50 px-2 py-1 rounded">Supported by {claim.citationIds.length} source(s)</span>
-                                ) : (
-                                <span className="text-amber-600 font-medium bg-amber-50 px-2 py-1 rounded flex items-center"><AlertCircle className="h-3 w-3 mr-1" /> Missing Citation</span>
-                                )}
-                            </div>
-                            <button className="text-gray-400 hover:text-indigo-600 font-medium">View Source</button>
-                        </div>
+              {summaryData.claims?.map((claim, idx) => (
+                <div key={idx} className="flex flex-col h-full bg-white p-5 rounded-xl border border-neutral-200 shadow-2xs">
+                  <div className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider mb-1">
+                    Assertion #{idx + 1}
+                  </div>
+                  <p className="font-semibold text-black mb-4 text-sm leading-snug">
+                    "{claim.claim}"
+                  </p>
+                  
+                  <div className="mt-auto pt-4 border-t border-neutral-100">
+                    <div className="flex items-start text-xs text-neutral-600 bg-neutral-50 p-3 rounded-lg border border-neutral-200 mb-3">
+                      <Quote className="w-3.5 h-3.5 text-neutral-400 mr-2 flex-shrink-0 mt-0.5" />
+                      <span className="italic line-clamp-3">
+                        "{claim.evidence || 'Exact passage extracted from primary document source.'}"
+                      </span>
                     </div>
-                </GlassCard>
-                ))}
+                    
+                    <div className="flex items-center justify-between text-xs">
+                      {claim.citationIds?.length > 0 ? (
+                        <span className="text-neutral-900 font-semibold bg-neutral-100 border border-neutral-300 px-2 py-0.5 rounded text-[11px]">
+                          Cited by {claim.citationIds.length} reference(s)
+                        </span>
+                      ) : (
+                        <span className="text-neutral-600 font-medium bg-neutral-100 border border-neutral-200 px-2 py-0.5 rounded text-[11px] flex items-center">
+                          <AlertCircle className="h-3 w-3 mr-1 text-neutral-600" /> Unlinked Citation
+                        </span>
+                      )}
+                      <span className="text-[11px] font-semibold text-black cursor-pointer hover:underline">
+                        Audit Citation
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
           
-          <GlassPanel className="p-6 bg-gradient-to-br from-amber-50/50 to-orange-50/50 border-amber-100">
-              <div className="flex justify-between items-center mb-6">
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                        <Lightbulb className="w-5 h-5 mr-2 text-amber-500" />
-                        Research Ideation
-                    </h3>
-                    <p className="text-sm text-gray-600">Generate potential research gaps and novel questions based on the evidence above.</p>
-                  </div>
-                  <GlassButton variant="primary" className="bg-amber-500 hover:bg-amber-600 text-white" onClick={generateIdeas} disabled={generatingIdeas}>
-                      {generatingIdeas ? 'Brainstorming...' : 'Generate Ideas'}
-                  </GlassButton>
+          {/* Research Ideation & Question Formulation */}
+          <div className="p-6 bg-white rounded-xl border border-neutral-200 shadow-2xs">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center pb-4 mb-6 border-b border-neutral-100 gap-4">
+              <div>
+                <h3 className="text-base font-bold text-black uppercase tracking-wider flex items-center">
+                  <Lightbulb className="w-4 h-4 mr-2 text-black" />
+                  Novel Research Directions & Gaps
+                </h3>
+                <p className="text-xs text-neutral-500 mt-0.5">
+                  Synthesize unaddressed research gaps into formal research hypotheses.
+                </p>
               </div>
-              
-              {ideas.length > 0 && (
-                  <div className="space-y-4 mt-6">
-                      {ideas.map((idea, i) => (
-                          <div key={i} className="bg-white/80 p-5 rounded-xl border border-amber-200 shadow-sm">
-                              <h4 className="font-bold text-gray-900 mb-2">{idea.title}</h4>
-                              <div className="space-y-2 text-sm">
-                                  <p><span className="font-semibold text-amber-700">Potential Gap:</span> {idea.gap}</p>
-                                  <p><span className="font-semibold text-indigo-700">Research Question:</span> {idea.question}</p>
-                              </div>
-                              <div className="mt-4 flex justify-end space-x-2">
-                                  <button className="text-xs font-medium text-gray-500 hover:text-indigo-600 bg-white border border-gray-200 px-3 py-1.5 rounded">Save to Workspace</button>
-                              </div>
-                          </div>
-                      ))}
-                      
-                      <div className="flex justify-end pt-4 mt-6 border-t border-amber-200/50">
-                          <GlassButton variant="primary" onClick={() => navigate('/app/drafting', { state: { papers, ideas, claims: summaryData.claims } })}>
-                              Proceed to Drafting <ArrowRight className="w-4 h-4 ml-2" />
-                          </GlassButton>
-                      </div>
+              <GlassButton 
+                variant="secondary" 
+                onClick={generateIdeas} 
+                disabled={generatingIdeas}
+              >
+                {generatingIdeas ? 'Synthesizing...' : 'Formulate Novel Directions'}
+              </GlassButton>
+            </div>
+            
+            {ideas.length > 0 ? (
+              <div className="space-y-4">
+                {ideas.map((idea, i) => (
+                  <div key={i} className="bg-neutral-50 p-5 rounded-xl border border-neutral-200">
+                    <h4 className="font-bold text-sm text-black mb-2">
+                      {idea.title}
+                    </h4>
+                    <div className="space-y-2 text-xs">
+                      <p>
+                        <span className="font-bold uppercase tracking-wider text-neutral-500 mr-2">Literature Gap:</span>
+                        <span className="text-neutral-800">{idea.gap}</span>
+                      </p>
+                      <p>
+                        <span className="font-bold uppercase tracking-wider text-black mr-2">Research Question:</span>
+                        <span className="font-semibold text-black">{idea.question}</span>
+                      </p>
+                    </div>
                   </div>
-              )}
-          </GlassPanel>
+                ))}
+                
+                <div className="flex justify-end pt-4 mt-6 border-t border-neutral-200">
+                  <GlassButton 
+                    variant="primary" 
+                    onClick={() => navigate('/app/drafting', { state: { papers, ideas, claims: summaryData.claims } })}
+                  >
+                    Proceed to Manuscript Drafting <ArrowRight className="w-4 h-4 ml-2" />
+                  </GlassButton>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-xs text-neutral-500 mb-3">
+                  Ready to extrapolate unaddressed literature gaps and formulate actionable research hypotheses.
+                </p>
+                <GlassButton variant="primary" onClick={generateIdeas} disabled={generatingIdeas}>
+                  Brainstorm Research Directions
+                </GlassButton>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

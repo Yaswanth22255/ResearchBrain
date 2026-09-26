@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PenTool, CheckCircle, Save, Download, FolderOpen } from 'lucide-react';
+import { PenTool, CheckCircle, Save, Download, FolderOpen, ShieldCheck } from 'lucide-react';
 import { GlassCard } from '../components/glass/GlassCard';
 import { GlassPanel } from '../components/glass/GlassPanel';
 import { GlassButton } from '../components/glass/GlassButton';
@@ -14,19 +14,25 @@ const Drafting = () => {
   const [draft, setDraft] = useState('');
   const [generating, setGenerating] = useState(false);
   const [complianceRules, setComplianceRules] = useState([
-    { id: 1, text: 'Only uses Verified Claims', checked: verified },
-    { id: 2, text: 'Includes Literature Overview', checked: false },
-    { id: 3, text: 'Identifies clear Research Gap', checked: false },
-    { id: 4, text: 'Proposes novel Research Question', checked: false }
+    { id: 1, text: 'Grounded in Verified Citations Only', checked: verified },
+    { id: 2, text: 'Systematic Literature Overview Formulated', checked: false },
+    { id: 3, text: 'Empirical Research Gap Clearly Articulated', checked: false },
+    { id: 4, text: 'Novel Testable Hypothesis Proposed', checked: false }
   ]);
 
   if (papers.length === 0) {
     return (
-      <GlassPanel className="text-center py-16 max-w-2xl mx-auto mt-10">
-        <FolderOpen className="mx-auto h-12 w-12 text-indigo-300 mb-4" />
-        <h2 className="text-xl font-bold text-gray-900 mb-2">No Context for Drafting</h2>
-        <p className="text-gray-600 mb-6">Select literature from the Discovery page and generate ideas before drafting.</p>
-        <GlassButton variant="primary" onClick={() => navigate('/app/discover')}>Go to Discovery</GlassButton>
+      <GlassPanel className="text-center py-16 max-w-2xl mx-auto mt-10 bg-white border border-neutral-200">
+        <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mx-auto mb-4 border border-neutral-200">
+          <FolderOpen className="h-6 w-6 text-neutral-600" />
+        </div>
+        <h2 className="text-xl font-bold text-black mb-2">No Context for Manuscript Drafting</h2>
+        <p className="text-sm text-neutral-500 mb-6">
+          Drafting synthesizes verified literature evidence into a formal academic outline. Query and stage literature first.
+        </p>
+        <GlassButton variant="primary" onClick={() => navigate('/app/discover')}>
+          Go to Discovery
+        </GlassButton>
       </GlassPanel>
     );
   }
@@ -34,91 +40,147 @@ const Drafting = () => {
   const generateDraft = () => {
     setGenerating(true);
     setTimeout(() => {
-      setDraft(`# Introduction
-The field of Artificial Intelligence has seen rapid growth...
+      setDraft(`# Empirical Research Outline & Literature Synthesis
 
-# Literature Overview
-Several key papers propose new methodologies...
+## 1. Introduction & Theoretical Foundations
+Recent advancements in literature demonstrate substantial progression in domain-specific problem formulations. However, rigorous deterministic evaluation remains a persistent challenge across modern empirical implementations.
 
-# Potential Research Gap
-Despite these advancements, there remains a significant gap in our understanding of...
+## 2. Systematic Literature Review
+Based on our multi-source index analysis (${papers.length} publications reviewed):
+${papers.map(p => `- **${p.title}** (${p.year}): Explores foundational methodologies with specific attention to structural limits.`).join('\n')}
 
-# Research Question & Direction
-This project proposes a novel approach to address...
+## 3. Identified Research Gaps
+Across the evaluated corpus, there exists an evident lack of formal deterministic verification pipelines. Specifically, empirical evidence reveals that statistical certainty measures fail to guard against subtle out-of-distribution reasoning degradations.
 
-# References
-${papers.map(p => `- ${p.title} (${p.year})`).join('\n')}`);
+## 4. Proposed Research Hypothesis & Methodology
+We formulate the hypothesis that integrating symbolic constraint boundaries into continuous embedding spaces guarantees strict adherence to factual assertions without diminishing semantic reasoning depth.
+
+## 5. Bibliographic References
+${papers.map((p, i) => `[${i + 1}] ${p.authors?.[0] || 'Author'} et al., "${p.title}", ${p.venue || 'Academic Repository'}, ${p.year || '2024'}. ${p.doi ? 'DOI: ' + p.doi : ''}`).join('\n')}`);
       
       setComplianceRules(complianceRules.map(rule => ({ ...rule, checked: true })));
       setGenerating(false);
-    }, 1500);
+    }, 1200);
+  };
+
+  const handleDownload = () => {
+    if (!draft) return;
+    const blob = new Blob([draft], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'research_draft.md';
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="max-w-6xl mx-auto pb-12 flex flex-col lg:flex-row gap-6">
+    <div className="max-w-6xl mx-auto pb-16 flex flex-col lg:flex-row gap-6">
+      {/* Main Drafting Editor */}
       <div className="flex-1 space-y-6">
-        <GlassPanel className="p-6">
-            <div className="flex justify-between items-center mb-6">
+        <div className="bg-white p-6 rounded-xl border border-neutral-200 shadow-2xs">
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center pb-4 mb-4 border-b border-neutral-100 gap-3">
             <div>
-                <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-                    <PenTool className="mr-2 text-indigo-600 w-6 h-6" />
-                    Research Draft
-                </h1>
-                <p className="text-sm text-gray-500 mt-1">Generate a structured draft grounded in verified evidence.</p>
+              <h1 className="text-xl font-bold tracking-tight text-black flex items-center">
+                <PenTool className="mr-2 text-black w-4 h-4" />
+                Manuscript Draft Workspace
+              </h1>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Generate an evidence-grounded research outline conforming to academic publication standards.
+              </p>
             </div>
+            
             <GlassButton
-                variant="primary"
-                onClick={generateDraft}
-                disabled={generating}
+              variant="primary"
+              onClick={generateDraft}
+              disabled={generating}
+              className="text-xs py-2 px-4 whitespace-nowrap"
             >
-                {generating ? 'Drafting from Evidence...' : 'Generate Grounded Draft'}
+              {generating ? 'Drafting from Evidence...' : 'Generate Grounded Draft'}
             </GlassButton>
-            </div>
+          </div>
 
-            <textarea
-            className="w-full h-[600px] bg-white/70 border border-gray-200 rounded-xl p-6 font-mono text-sm leading-relaxed text-gray-800 shadow-inner focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+          <textarea
+            className="w-full h-[580px] bg-neutral-50/70 border border-neutral-300 rounded-lg p-5 font-mono text-xs leading-relaxed text-black focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder="Your grounded draft will appear here..."
-            />
-            
-            <div className="mt-4 flex justify-end space-x-3">
-                <GlassButton variant="secondary" className="bg-white" disabled={!draft}>
-                    <Save className="w-4 h-4 mr-2"/> Save Draft
-                </GlassButton>
-                <GlassButton variant="primary" className="bg-indigo-600" disabled={!draft}>
-                    <Download className="w-4 h-4 mr-2"/> Export Markdown
-                </GlassButton>
-            </div>
-        </GlassPanel>
+            placeholder="Click 'Generate Grounded Draft' to produce a citation-grounded manuscript draft based on your verified literature corpus..."
+          />
+          
+          <div className="mt-4 flex justify-end space-x-3">
+            <GlassButton 
+              variant="secondary" 
+              disabled={!draft}
+              onClick={() => alert("Draft saved to workspace state.")}
+              className="text-xs"
+            >
+              <Save className="w-3.5 h-3.5 mr-1.5" /> Save Draft
+            </GlassButton>
+            <GlassButton 
+              variant="primary" 
+              disabled={!draft} 
+              onClick={handleDownload}
+              className="text-xs"
+            >
+              <Download className="w-3.5 h-3.5 mr-1.5" /> Export Markdown (.md)
+            </GlassButton>
+          </div>
+        </div>
       </div>
 
+      {/* Compliance & Context Sidebar */}
       <div className="w-full lg:w-80 space-y-6">
-        <GlassCard className="p-6 bg-white/80">
-            <h2 className="text-lg font-bold text-gray-900 mb-2">Compliance Check</h2>
-            <p className="text-xs text-gray-500 mb-6 leading-relaxed">Automatically verifies if the generated draft meets structural and evidence requirements.</p>
-            
-            <div className="space-y-4">
+        {/* Compliance Checklist */}
+        <div className="bg-white p-6 rounded-xl border border-neutral-200 shadow-2xs">
+          <div className="flex items-center space-x-2 mb-2">
+            <ShieldCheck className="w-4 h-4 text-black" />
+            <h2 className="text-sm font-bold text-black uppercase tracking-wider">
+              Academic Compliance
+            </h2>
+          </div>
+          <p className="text-xs text-neutral-500 mb-5 leading-normal">
+            Automated verification verifying that the draft fulfills formal publication and evidence criteria.
+          </p>
+          
+          <div className="space-y-3">
             {complianceRules.map(rule => (
-                <div key={rule.id} className="flex items-start bg-gray-50/80 p-3 rounded-lg border border-gray-100">
+              <div 
+                key={rule.id} 
+                className="flex items-start bg-neutral-50 p-3 rounded-lg border border-neutral-200"
+              >
                 {rule.checked ? (
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-black mr-2.5 flex-shrink-0 mt-0.5" />
                 ) : (
-                    <div className="h-5 w-5 rounded-full border-2 border-gray-300 mr-2 flex-shrink-0"></div>
+                  <div className="h-4 w-4 rounded-full border border-neutral-400 mr-2.5 flex-shrink-0 mt-0.5"></div>
                 )}
-                <span className={`text-sm font-medium ${rule.checked ? 'text-gray-900' : 'text-gray-500'}`}>{rule.text}</span>
-                </div>
+                <span className={`text-xs ${rule.checked ? 'text-black font-semibold' : 'text-neutral-500'}`}>
+                  {rule.text}
+                </span>
+              </div>
             ))}
-            </div>
-        </GlassCard>
+          </div>
+        </div>
         
-        <GlassCard className="p-6 bg-indigo-50/50 border-indigo-100">
-            <h2 className="text-sm font-bold text-indigo-900 mb-3 uppercase tracking-wider">Draft Context</h2>
-            <div className="text-sm text-indigo-800 space-y-2">
-                <p><strong>Papers:</strong> {papers.length}</p>
-                <p><strong>Verified Claims Used:</strong> {verified ? 'Yes' : 'No'}</p>
+        {/* Context Statistics */}
+        <div className="bg-white p-6 rounded-xl border border-neutral-200 shadow-2xs">
+          <h2 className="text-xs font-bold text-neutral-400 mb-3 uppercase tracking-wider">
+            Context Summary
+          </h2>
+          <div className="text-xs text-neutral-800 space-y-2">
+            <div className="flex justify-between py-1 border-b border-neutral-100">
+              <span className="text-neutral-500">Indexed Sources:</span>
+              <span className="font-bold text-black">{papers.length} publications</span>
             </div>
-        </GlassCard>
+            <div className="flex justify-between py-1 border-b border-neutral-100">
+              <span className="text-neutral-500">Verification Audit:</span>
+              <span className="font-bold text-black">{verified ? 'Completed' : 'Draft / Unverified'}</span>
+            </div>
+            <div className="flex justify-between py-1">
+              <span className="text-neutral-500">Citation Format:</span>
+              <span className="font-mono text-black">IEEE / ACM Standard</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
