@@ -19,6 +19,7 @@ import Explorer from './pages/Explorer';
 import Ideation from './pages/Ideation';
 import Verification from './pages/Verification';
 import Drafting from './pages/Drafting';
+import BrainStorm from './pages/BrainStorm';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="discover" element={<Discovery />} />
             <Route path="explore" element={<Explorer />} />
+            <Route path="brainstorm" element={<BrainStorm />} />
             <Route path="ideation" element={<Ideation />} />
             <Route path="verification" element={<Verification />} />
             <Route path="drafting" element={<Drafting />} />

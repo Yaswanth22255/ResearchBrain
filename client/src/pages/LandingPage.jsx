@@ -40,8 +40,7 @@ const LandingPage = () => {
         <div className="hidden lg:flex space-x-6 xl:space-x-8 text-sm font-medium text-neutral-700">
           <Link to="/" className="text-black font-semibold">Home</Link>
           <Link to="/app" className="hover:text-black transition-colors">Workspaces</Link>
-          <Link to="/app/discover" className="hover:text-black transition-colors">Discovery</Link>
-          <Link to="/app/explore" className="hover:text-black transition-colors">Thematic Map</Link>
+          <Link to="/app/brainstorm" className="hover:text-black transition-colors">BrainStorm</Link>
           <Link to="/app/ideation" className="hover:text-black transition-colors">Ideation</Link>
           <Link to="/app/verification" className="hover:text-black transition-colors">Verification</Link>
           <Link to="/app/drafting" className="hover:text-black transition-colors">Drafting</Link>
@@ -119,18 +118,11 @@ const LandingPage = () => {
             Workspaces & Projects
           </Link>
           <Link 
-            to="/app/discover" 
+            to="/app/brainstorm" 
             onClick={() => setMobileMenuOpen(false)} 
             className="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-100"
           >
-            Literature Discovery
-          </Link>
-          <Link 
-            to="/app/explore" 
-            onClick={() => setMobileMenuOpen(false)} 
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-100"
-          >
-            Thematic Landscape Map
+            BrainStorm Ideation
           </Link>
           <Link 
             to="/app/ideation" 
@@ -206,9 +198,9 @@ const LandingPage = () => {
             <GlassButton 
               variant="secondary" 
               className="text-base px-7 py-3" 
-              onClick={() => navigate('/app/discover')}
+              onClick={() => navigate('/app/brainstorm')}
             >
-              Explore Literature
+              BrainStorm Ideas
             </GlassButton>
           </div>
         </div>
@@ -295,8 +287,7 @@ const LandingPage = () => {
             <div className="hidden md:block absolute top-1/2 left-0 w-full h-[1px] bg-neutral-200 -z-10 -translate-y-1/2"></div>
             
             {[
-              { num: '01', title: 'Discover', desc: 'Hybrid literature search across databases', icon: Search, link: '/app/discover' },
-              { num: '02', title: 'Explore', desc: 'Cluster themes and publication trajectories', icon: Map, link: '/app/explore' },
+              { num: '01', title: 'BrainStorm', desc: 'Guided ideation from field to research gap', icon: Compass, link: '/app/brainstorm' },
               { num: '03', title: 'Understand', desc: 'Synthesize grounded evidence extracts', icon: BookOpen, link: '/app/ideation' },
               { num: '04', title: 'Ideate', desc: 'Surface research gaps and novel questions', icon: Lightbulb, link: '/app/ideation' },
               { num: '05', title: 'Verify', desc: 'Rule-based citation and claim verification', icon: ShieldCheck, link: '/app/verification' },
@@ -336,28 +327,28 @@ const LandingPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <GlassCard className="flex flex-col h-full bg-white border border-neutral-200 p-7">
               <div className="bg-neutral-100 text-black p-3 rounded-lg w-fit mb-5 border border-neutral-200">
-                <Search className="w-5 h-5" />
+                <Compass className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-bold text-black mb-2">Hybrid Literature Discovery</h3>
+              <h3 className="text-lg font-bold text-black mb-2">BrainStorm Intelligence</h3>
               <p className="text-neutral-600 text-sm mb-6 flex-grow leading-relaxed">
-                Retrieve and rank peer-reviewed papers using synchronized keyword and semantic embeddings across PubMed and OpenAlex.
+                Start from a broad field and navigate down to trending areas, relevant papers, and AI-assisted research potential without needing prior knowledge.
               </p>
-              <GlassButton variant="secondary" className="w-full justify-between" onClick={() => navigate('/app/discover')}>
-                <span>Explore Discovery</span>
+              <GlassButton variant="secondary" className="w-full justify-between" onClick={() => navigate('/app/brainstorm')}>
+                <span>Open BrainStorm</span>
                 <span>→</span>
               </GlassButton>
             </GlassCard>
 
             <GlassCard className="flex flex-col h-full bg-white border border-neutral-200 p-7">
               <div className="bg-neutral-100 text-black p-3 rounded-lg w-fit mb-5 border border-neutral-200">
-                <Map className="w-5 h-5" />
+                <Search className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-bold text-black mb-2">Thematic Landscape Mapping</h3>
+              <h3 className="text-lg font-bold text-black mb-2">Direct Search</h3>
               <p className="text-neutral-600 text-sm mb-6 flex-grow leading-relaxed">
-                Deconstruct retrieved publications into methodology clusters, application domains, and publication timeline charts.
+                Already know what you're looking for? Bypass BrainStorm and directly search your specific research queries across our semantic retrieval engine.
               </p>
-              <GlassButton variant="secondary" className="w-full justify-between" onClick={() => navigate('/app/explore')}>
-                <span>Explore Themes</span>
+              <GlassButton variant="secondary" className="w-full justify-between" onClick={() => navigate('/app/discover')}>
+                <span>Direct Search</span>
                 <span>→</span>
               </GlassButton>
             </GlassCard>
@@ -434,7 +425,7 @@ const LandingPage = () => {
           </div>
           <div className="flex space-x-6 font-medium text-neutral-600">
             <Link to="/app" className="hover:text-black transition-colors">Workspace</Link>
-            <Link to="/app/discover" className="hover:text-black transition-colors">Discovery</Link>
+            <Link to="/app/brainstorm" className="hover:text-black transition-colors">BrainStorm</Link>
             <Link to="/app/verification" className="hover:text-black transition-colors">Verification Audit</Link>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { BookOpen, FolderOpen, Search, Lightbulb, CheckCircle, PenTool, Map, ChevronLeft, Menu, X, ArrowLeft, LogOut } from 'lucide-react';
+import { BookOpen, FolderOpen, Search, Lightbulb, CheckCircle, PenTool, Map, ChevronLeft, Menu, X, ArrowLeft, LogOut, Compass } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -37,8 +37,7 @@ const Layout = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/app', icon: FolderOpen },
-    { name: 'Discovery', path: '/app/discover', icon: Search },
-    { name: 'Explorer', path: '/app/explore', icon: Map },
+    { name: 'BrainStorm', path: '/app/brainstorm', icon: Compass },
     { name: 'Ideation', path: '/app/ideation', icon: Lightbulb },
     { name: 'Verification', path: '/app/verification', icon: CheckCircle },
     { name: 'Drafting', path: '/app/drafting', icon: PenTool },
