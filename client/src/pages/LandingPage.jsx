@@ -4,12 +4,16 @@ import { BookOpen, Search, Map, Lightbulb, CheckCircle, PenTool, ArrowRight, Shi
 import { GlassPanel } from '../components/glass/GlassPanel';
 import { GlassCard } from '../components/glass/GlassCard';
 import { GlassButton } from '../components/glass/GlassButton';
+import { AnimatedResearchBackground } from '../components/background/AnimatedResearchBackground';
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col bg-[#fafafa]">
+      {/* Subtle Animated Knowledge Network Background */}
+      <AnimatedResearchBackground />
+
       {/* Floating White Glass Navbar */}
       <nav className="glass-nav fixed top-0 w-full z-50 px-6 md:px-12 py-3.5 flex justify-between items-center transition-all duration-300">
         <div className="flex items-center space-x-3">
@@ -41,9 +45,9 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <main className="flex-grow pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center">
+      <main className="flex-grow pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center relative z-10">
         <div className="text-center max-w-4xl mb-14">
-          <div className="inline-flex items-center space-x-2 bg-white border border-neutral-200 px-3.5 py-1.5 rounded-full text-neutral-800 text-xs font-semibold tracking-wide mb-6 shadow-2xs">
+          <div className="inline-flex items-center space-x-2 bg-white/90 backdrop-blur-xs border border-neutral-200 px-3.5 py-1.5 rounded-full text-neutral-800 text-xs font-semibold tracking-wide mb-6 shadow-2xs">
             <span className="inline-block w-2 h-2 rounded-full bg-black"></span>
             <span>Neuro-Symbolic Evidence Verification Engine Active</span>
           </div>
@@ -284,7 +288,7 @@ const LandingPage = () => {
       </main>
 
       {/* Monochromatic Academic Footer */}
-      <footer className="border-t border-neutral-200 bg-white py-8 mt-auto">
+      <footer className="border-t border-neutral-200 bg-white/90 backdrop-blur-md py-8 mt-auto relative z-10">
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-xs text-neutral-500">
           <div className="flex items-center space-x-2.5 mb-4 md:mb-0">
             <div className="p-1 rounded bg-black text-white">
