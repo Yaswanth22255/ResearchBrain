@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, ArrowLeft, Home } from 'lucide-react';
 import { GlassButton } from '../components/glass/GlassButton';
-import { AnimatedResearchBackground } from '../components/background/AnimatedResearchBackground';
+import { ResearchIntelligenceBackground } from '../components/background/ResearchIntelligenceBackground';
 
 const NotFound = () => {
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col justify-between bg-[#fafafa]">
-      <AnimatedResearchBackground />
+      <ResearchIntelligenceBackground />
 
       <header className="relative z-10 w-full px-6 py-6 max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2.5">

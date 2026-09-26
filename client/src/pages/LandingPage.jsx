@@ -4,7 +4,7 @@ import { BookOpen, Search, Map, Lightbulb, CheckCircle, PenTool, ArrowRight, Shi
 import { GlassPanel } from '../components/glass/GlassPanel';
 import { GlassCard } from '../components/glass/GlassCard';
 import { GlassButton } from '../components/glass/GlassButton';
-import { AnimatedResearchBackground } from '../components/background/AnimatedResearchBackground';
+import { ResearchIntelligenceBackground } from '../components/background/ResearchIntelligenceBackground';
 
 import { useAuth } from '../context/AuthContext';
 import { User, LogOut } from 'lucide-react';
@@ -21,8 +21,8 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col bg-[#fafafa]">
-      {/* Subtle Animated Knowledge Network Background */}
-      <AnimatedResearchBackground />
+      {/* Living Research Graph Intelligence Background */}
+      <ResearchIntelligenceBackground />
 
       {/* Floating White Glass Navbar */}
       <nav className="glass-nav fixed top-0 w-full z-50 px-6 md:px-12 py-3.5 flex justify-between items-center transition-all duration-300">

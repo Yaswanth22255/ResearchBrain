@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen } from 'lucide-react';
-import { AnimatedResearchBackground } from '../background/AnimatedResearchBackground';
+import { ResearchIntelligenceBackground } from '../background/ResearchIntelligenceBackground';
 
 export const AuthLayout = ({ children, title, subtitle }) => {
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col justify-between bg-[#fafafa]">
-      {/* Subtle Animated Knowledge Network Background */}
-      <AnimatedResearchBackground />
+      {/* Living Research Graph Intelligence Background */}
+      <ResearchIntelligenceBackground />
 
       {/* Top Academic Header */}
       <header className="relative z-10 w-full px-6 py-6 max-w-7xl mx-auto flex items-center justify-between">
