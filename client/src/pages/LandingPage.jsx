@@ -6,9 +6,18 @@ import { GlassCard } from '../components/glass/GlassCard';
 import { GlassButton } from '../components/glass/GlassButton';
 import { AnimatedResearchBackground } from '../components/background/AnimatedResearchBackground';
 
+import { useAuth } from '../context/AuthContext';
+import { User, LogOut } from 'lucide-react';
+
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    setMobileMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col bg-[#fafafa]">
@@ -40,13 +49,36 @@ const LandingPage = () => {
 
         {/* Action Buttons & Mobile Toggle */}
         <div className="flex items-center space-x-3">
-          <div className="hidden sm:flex space-x-2">
-            <GlassButton variant="secondary" onClick={() => navigate('/app')}>
-              Workspaces
-            </GlassButton>
-            <GlassButton variant="primary" onClick={() => navigate('/app')}>
-              Start Research
-            </GlassButton>
+          <div className="hidden sm:flex items-center space-x-2.5">
+            {isAuthenticated ? (
+              <>
+                <div className="flex items-center space-x-2 px-2.5 py-1 bg-neutral-100 rounded-lg border border-neutral-200 text-xs">
+                  <div className="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center font-bold text-[10px]">
+                    {user?.name?.charAt(0) || 'U'}
+                  </div>
+                  <span className="font-semibold text-black max-w-[120px] truncate">{user?.name}</span>
+                </div>
+                <GlassButton variant="secondary" onClick={() => navigate('/app')}>
+                  Workspace
+                </GlassButton>
+                <button
+                  onClick={handleLogout}
+                  title="Sign Out"
+                  className="p-2 rounded-lg text-neutral-500 hover:text-black hover:bg-neutral-100 border border-neutral-200 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </>
+            ) : (
+              <>
+                <GlassButton variant="secondary" onClick={() => navigate('/login')}>
+                  Sign In
+                </GlassButton>
+                <GlassButton variant="primary" onClick={() => navigate('/register')}>
+                  Create Account
+                </GlassButton>
+              </>
+            )}
           </div>
 
           {/* Mobile Hamburger Toggle Button */}
@@ -63,6 +95,15 @@ const LandingPage = () => {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed top-[60px] left-0 w-full bg-white/95 backdrop-blur-xl border-b border-neutral-200 z-40 px-6 py-6 space-y-3 shadow-lg">
+          {isAuthenticated && (
+            <div className="p-3 bg-neutral-50 rounded-lg border border-neutral-200 flex items-center justify-between mb-2">
+              <div className="text-xs">
+                <div className="font-bold text-black">{user?.name}</div>
+                <div className="text-neutral-500 text-[11px] truncate">{user?.email}</div>
+              </div>
+              <span className="text-[10px] font-semibold bg-neutral-200 px-2 py-0.5 rounded text-neutral-800">Active</span>
+            </div>
+          )}
           <Link 
             to="/" 
             onClick={() => setMobileMenuOpen(false)} 
@@ -112,10 +153,27 @@ const LandingPage = () => {
           >
             Manuscript Drafting
           </Link>
+          
           <div className="pt-3 border-t border-neutral-100 flex flex-col space-y-2">
-            <GlassButton variant="primary" className="w-full" onClick={() => { setMobileMenuOpen(false); navigate('/app'); }}>
-              Enter Workspace →
-            </GlassButton>
+            {isAuthenticated ? (
+              <>
+                <GlassButton variant="primary" className="w-full" onClick={() => { setMobileMenuOpen(false); navigate('/app'); }}>
+                  Enter Workspace →
+                </GlassButton>
+                <GlassButton variant="secondary" className="w-full" onClick={handleLogout}>
+                  Sign Out
+                </GlassButton>
+              </>
+            ) : (
+              <>
+                <GlassButton variant="primary" className="w-full" onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}>
+                  Sign In
+                </GlassButton>
+                <GlassButton variant="secondary" className="w-full" onClick={() => { setMobileMenuOpen(false); navigate('/register'); }}>
+                  Create Account
+                </GlassButton>
+              </>
+            )}
           </div>
         </div>
       )}

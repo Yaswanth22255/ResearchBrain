@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { BookOpen, FolderOpen, Search, Lightbulb, CheckCircle, PenTool, Map, Settings, ChevronLeft, Menu, X, ArrowLeft } from 'lucide-react';
+import { BookOpen, FolderOpen, Search, Lightbulb, CheckCircle, PenTool, Map, ChevronLeft, Menu, X, ArrowLeft, LogOut } from 'lucide-react';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [activeProject, setActiveProject] = useState(null);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
@@ -28,6 +30,11 @@ const Layout = () => {
     setMobileSidebarOpen(false);
   }, [location.pathname]);
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   const navItems = [
     { name: 'Dashboard', path: '/app', icon: FolderOpen },
     { name: 'Discovery', path: '/app/discover', icon: Search },
@@ -36,6 +43,8 @@ const Layout = () => {
     { name: 'Verification', path: '/app/verification', icon: CheckCircle },
     { name: 'Drafting', path: '/app/drafting', icon: PenTool },
   ];
+
+  const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'R';
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#fafafa]">
@@ -111,17 +120,39 @@ const Layout = () => {
           })}
         </nav>
         
-        <div className="p-3 border-t border-neutral-200 space-y-1">
-          <Link 
-            to="/" 
-            className="flex items-center px-3 py-2 text-xs font-semibold text-neutral-600 hover:text-black hover:bg-neutral-100 rounded-lg transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 mr-2" />
-            Back to Public Home
-          </Link>
-          <div className="px-3 py-1.5 text-[11px] text-neutral-400 font-medium flex items-center justify-between">
-            <span>Audit Pipeline</span>
-            <span className="font-semibold text-neutral-700">Formal v2.1</span>
+        {/* User Profile & Sign Out Footer */}
+        <div className="p-3 border-t border-neutral-200 space-y-2">
+          {user && (
+            <div className="p-2.5 rounded-lg bg-neutral-50 border border-neutral-200 flex items-center justify-between">
+              <div className="flex items-center space-x-2.5 min-w-0">
+                <div className="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+                  {userInitial}
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold text-black truncate">{user.name}</div>
+                  <div className="text-[10px] text-neutral-500 truncate">{user.email}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between pt-1">
+            <Link 
+              to="/" 
+              className="flex items-center text-xs font-semibold text-neutral-600 hover:text-black transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 mr-1.5" />
+              Public Home
+            </Link>
+
+            <button
+              onClick={handleLogout}
+              className="flex items-center text-xs font-semibold text-neutral-600 hover:text-red-600 transition-colors"
+              title="Sign Out"
+            >
+              <LogOut className="w-3.5 h-3.5 mr-1" />
+              Sign Out
+            </button>
           </div>
         </div>
       </div>
@@ -153,14 +184,22 @@ const Layout = () => {
             >
               Literature Search
             </Link>
-            <Link 
-              to="/" 
-              className="text-xs font-medium text-neutral-600 hover:text-black hidden sm:inline transition-colors"
-            >
-              Home
-            </Link>
-            <div className="h-8 w-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs tracking-wider border border-black shadow-xs">
-              RP
+
+            {/* User Profile Badge / Sign Out */}
+            <div className="flex items-center space-x-2">
+              <div 
+                className="h-8 w-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs tracking-wider border border-black shadow-xs cursor-pointer"
+                title={user ? `${user.name} (${user.email})` : 'Researcher Profile'}
+              >
+                {userInitial}
+              </div>
+              <button
+                onClick={handleLogout}
+                className="hidden sm:inline-flex items-center text-xs font-medium text-neutral-500 hover:text-black p-1.5 rounded transition-colors"
+                title="Sign Out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </header>
