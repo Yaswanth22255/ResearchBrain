@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BookOpen, Search, Map, Lightbulb, CheckCircle, PenTool, ArrowRight, ShieldCheck, FileText } from 'lucide-react';
+import { BookOpen, Search, Map, Lightbulb, CheckCircle, PenTool, ArrowRight, ShieldCheck, FileText, Menu, X, FolderOpen } from 'lucide-react';
 import { GlassPanel } from '../components/glass/GlassPanel';
 import { GlassCard } from '../components/glass/GlassCard';
 import { GlassButton } from '../components/glass/GlassButton';
@@ -8,6 +8,7 @@ import { AnimatedResearchBackground } from '../components/background/AnimatedRes
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col bg-[#fafafa]">
@@ -16,33 +17,108 @@ const LandingPage = () => {
 
       {/* Floating White Glass Navbar */}
       <nav className="glass-nav fixed top-0 w-full z-50 px-6 md:px-12 py-3.5 flex justify-between items-center transition-all duration-300">
-        <div className="flex items-center space-x-3">
-          <div className="bg-black text-white p-2 rounded-lg">
+        <Link to="/" className="flex items-center space-x-3 cursor-pointer group">
+          <div className="bg-black text-white p-2 rounded-lg group-hover:bg-neutral-800 transition-colors">
             <BookOpen className="h-5 w-5" />
           </div>
           <span className="font-bold text-lg text-black tracking-tight">ResearchPro</span>
           <span className="text-[11px] font-semibold text-neutral-500 uppercase tracking-widest px-2 py-0.5 border border-neutral-300 rounded bg-white">
             Intelligence
           </span>
-        </div>
+        </Link>
         
-        <div className="hidden md:flex space-x-8 text-sm font-medium text-neutral-700">
+        {/* Desktop Navigation Links */}
+        <div className="hidden lg:flex space-x-6 xl:space-x-8 text-sm font-medium text-neutral-700">
           <Link to="/" className="text-black font-semibold">Home</Link>
+          <Link to="/app" className="hover:text-black transition-colors">Workspaces</Link>
           <Link to="/app/discover" className="hover:text-black transition-colors">Discovery</Link>
           <Link to="/app/explore" className="hover:text-black transition-colors">Thematic Map</Link>
           <Link to="/app/ideation" className="hover:text-black transition-colors">Ideation</Link>
           <Link to="/app/verification" className="hover:text-black transition-colors">Verification</Link>
+          <Link to="/app/drafting" className="hover:text-black transition-colors">Drafting</Link>
         </div>
 
+        {/* Action Buttons & Mobile Toggle */}
         <div className="flex items-center space-x-3">
-          <GlassButton variant="secondary" onClick={() => navigate('/app')}>
-            Sign In
-          </GlassButton>
-          <GlassButton variant="primary" onClick={() => navigate('/app')}>
-            Start Research
-          </GlassButton>
+          <div className="hidden sm:flex space-x-2">
+            <GlassButton variant="secondary" onClick={() => navigate('/app')}>
+              Workspaces
+            </GlassButton>
+            <GlassButton variant="primary" onClick={() => navigate('/app')}>
+              Start Research
+            </GlassButton>
+          </div>
+
+          {/* Mobile Hamburger Toggle Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-lg border border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-100 transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed top-[60px] left-0 w-full bg-white/95 backdrop-blur-xl border-b border-neutral-200 z-40 px-6 py-6 space-y-3 shadow-lg">
+          <Link 
+            to="/" 
+            onClick={() => setMobileMenuOpen(false)} 
+            className="block px-3 py-2 rounded-lg text-sm font-bold text-black bg-neutral-100"
+          >
+            Home
+          </Link>
+          <Link 
+            to="/app" 
+            onClick={() => setMobileMenuOpen(false)} 
+            className="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          >
+            Workspaces & Projects
+          </Link>
+          <Link 
+            to="/app/discover" 
+            onClick={() => setMobileMenuOpen(false)} 
+            className="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          >
+            Literature Discovery
+          </Link>
+          <Link 
+            to="/app/explore" 
+            onClick={() => setMobileMenuOpen(false)} 
+            className="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          >
+            Thematic Landscape Map
+          </Link>
+          <Link 
+            to="/app/ideation" 
+            onClick={() => setMobileMenuOpen(false)} 
+            className="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          >
+            Ideation & Gaps
+          </Link>
+          <Link 
+            to="/app/verification" 
+            onClick={() => setMobileMenuOpen(false)} 
+            className="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          >
+            Citation Verification
+          </Link>
+          <Link 
+            to="/app/drafting" 
+            onClick={() => setMobileMenuOpen(false)} 
+            className="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          >
+            Manuscript Drafting
+          </Link>
+          <div className="pt-3 border-t border-neutral-100 flex flex-col space-y-2">
+            <GlassButton variant="primary" className="w-full" onClick={() => { setMobileMenuOpen(false); navigate('/app'); }}>
+              Enter Workspace →
+            </GlassButton>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <main className="flex-grow pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center relative z-10">

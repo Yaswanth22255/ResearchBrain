@@ -5,20 +5,41 @@ import { GlassCard } from '../components/glass/GlassCard';
 import { GlassPanel } from '../components/glass/GlassPanel';
 import { GlassButton } from '../components/glass/GlassButton';
 
+import { BENCHMARK_PAPERS } from '../services/sampleData';
+
 const Drafting = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const papers = location.state?.papers || [];
+  
+  const [papers, setPapers] = useState(() => {
+    if (location.state?.papers && location.state.papers.length > 0) {
+      return location.state.papers;
+    }
+    const cached = localStorage.getItem('activeProjectPapers');
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+    return [];
+  });
+
   const verified = location.state?.verified || false;
   
-  const [draft, setDraft] = useState('');
+  const [draft, setDraft] = useState(() => localStorage.getItem('activeProjectDraft') || '');
   const [generating, setGenerating] = useState(false);
   const [complianceRules, setComplianceRules] = useState([
     { id: 1, text: 'Grounded in Verified Citations Only', checked: verified },
-    { id: 2, text: 'Systematic Literature Overview Formulated', checked: false },
-    { id: 3, text: 'Empirical Research Gap Clearly Articulated', checked: false },
-    { id: 4, text: 'Novel Testable Hypothesis Proposed', checked: false }
+    { id: 2, text: 'Systematic Literature Overview Formulated', checked: !!draft },
+    { id: 3, text: 'Empirical Research Gap Clearly Articulated', checked: !!draft },
+    { id: 4, text: 'Novel Testable Hypothesis Proposed', checked: !!draft }
   ]);
+
+  const handleLoadBenchmarkContext = () => {
+    localStorage.setItem('activeProjectPapers', JSON.stringify(BENCHMARK_PAPERS));
+    setPapers(BENCHMARK_PAPERS);
+  };
 
   if (papers.length === 0) {
     return (
@@ -27,12 +48,17 @@ const Drafting = () => {
           <FolderOpen className="h-6 w-6 text-neutral-600" />
         </div>
         <h2 className="text-xl font-bold text-black mb-2">No Context for Manuscript Drafting</h2>
-        <p className="text-sm text-neutral-500 mb-6">
-          Drafting synthesizes verified literature evidence into a formal academic outline. Query and stage literature first.
+        <p className="text-sm text-neutral-500 mb-6 max-w-md mx-auto">
+          Drafting synthesizes verified literature evidence into a formal academic outline. You can load our benchmark research context or query papers first.
         </p>
-        <GlassButton variant="primary" onClick={() => navigate('/app/discover')}>
-          Go to Discovery
-        </GlassButton>
+        <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-3">
+          <GlassButton variant="primary" onClick={handleLoadBenchmarkContext}>
+            Load Benchmark Research Context
+          </GlassButton>
+          <GlassButton variant="secondary" onClick={() => navigate('/app/discover')}>
+            Go to Discovery Search
+          </GlassButton>
+        </div>
       </GlassPanel>
     );
   }
@@ -111,7 +137,10 @@ ${papers.map((p, i) => `[${i + 1}] ${p.authors?.[0] || 'Author'} et al., "${p.ti
             <GlassButton 
               variant="secondary" 
               disabled={!draft}
-              onClick={() => alert("Draft saved to workspace state.")}
+              onClick={() => {
+                localStorage.setItem('activeProjectDraft', draft);
+                alert("Manuscript draft saved to project workspace.");
+              }}
               className="text-xs"
             >
               <Save className="w-3.5 h-3.5 mr-1.5" /> Save Draft

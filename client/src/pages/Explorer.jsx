@@ -6,12 +6,32 @@ import { GlassCard } from '../components/glass/GlassCard';
 import { GlassPanel } from '../components/glass/GlassPanel';
 import { GlassButton } from '../components/glass/GlassButton';
 
+import { BENCHMARK_PAPERS } from '../services/sampleData';
+
 const Explorer = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const papers = location.state?.papers || [];
+  
+  const [papers, setPapers] = useState(() => {
+    if (location.state?.papers && location.state.papers.length > 0) {
+      return location.state.papers;
+    }
+    const cached = localStorage.getItem('activeProjectPapers');
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+    return [];
+  });
   
   const [themes, setThemes] = useState([]);
+
+  const handleLoadBenchmark = () => {
+    localStorage.setItem('activeProjectPapers', JSON.stringify(BENCHMARK_PAPERS));
+    setPapers(BENCHMARK_PAPERS);
+  };
   
   useEffect(() => {
     if (papers.length > 0) {
@@ -40,12 +60,17 @@ const Explorer = () => {
           <FolderOpen className="h-6 w-6 text-neutral-600" />
         </div>
         <h2 className="text-xl font-bold text-black mb-2">No Literature In Exploration Buffer</h2>
-        <p className="text-sm text-neutral-500 mb-6">
-          The Thematic Explorer synthesizes clusters from retrieved papers. Return to Discovery and execute a search first.
+        <p className="text-sm text-neutral-500 mb-6 max-w-md mx-auto">
+          The Thematic Explorer synthesizes clusters and timelines from retrieved papers. You can load our curated benchmark AI corpus or search live databases.
         </p>
-        <GlassButton variant="primary" onClick={() => navigate('/app/discover')}>
-          Go to Discovery Search
-        </GlassButton>
+        <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-3">
+          <GlassButton variant="primary" onClick={handleLoadBenchmark}>
+            Load Benchmark Research Corpus
+          </GlassButton>
+          <GlassButton variant="secondary" onClick={() => navigate('/app/discover')}>
+            Go to Discovery Search
+          </GlassButton>
+        </div>
       </GlassPanel>
     );
   }

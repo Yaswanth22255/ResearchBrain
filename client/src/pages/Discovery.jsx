@@ -6,6 +6,8 @@ import { GlassButton } from '../components/glass/GlassButton';
 import { GlassPanel } from '../components/glass/GlassPanel';
 import api from '../services/api';
 
+import { BENCHMARK_PAPERS } from '../services/sampleData';
+
 const Discovery = () => {
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
@@ -17,15 +19,43 @@ const Discovery = () => {
   const projectId = localStorage.getItem('activeProjectId');
 
   useEffect(() => {
+    // Load cached literature if available
+    const cached = localStorage.getItem('activeProjectPapers');
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setResults(parsed);
+        }
+      } catch (e) {
+        console.error("Cache parse error", e);
+      }
+    }
+
     if (projectId) {
       api.get(`/projects/${projectId}`).then(res => {
         setProject(res.data);
-        setQuery(res.data.name || '');
+        if (!query) setQuery(res.data.name || '');
       }).catch(err => {
         console.error(err);
       });
     }
   }, [projectId]);
+
+  const handleInitDemoWorkspace = () => {
+    const demoProject = {
+      _id: 'demo_ai_workspace',
+      name: 'Large Language Model Grounding & Factuality',
+      domain: 'Computer Science',
+      subdomain: 'Natural Language Processing',
+      constraints: { yearStart: 2020 }
+    };
+    localStorage.setItem('activeProjectId', demoProject._id);
+    localStorage.setItem('activeProjectPapers', JSON.stringify(BENCHMARK_PAPERS));
+    setProject(demoProject);
+    setQuery(demoProject.name);
+    setResults(BENCHMARK_PAPERS);
+  };
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -37,25 +67,24 @@ const Discovery = () => {
       domain: project?.domain || '',
       subdomain: project?.subdomain || '',
       yearStart: project?.constraints?.yearStart || '2019',
-      projectId
+      projectId: projectId || 'demo_ai_workspace'
     };
 
     try {
       const response = await api.post('/search', searchPayload);
       setResults(response.data);
+      localStorage.setItem('activeProjectPapers', JSON.stringify(response.data));
     } catch (error) {
       console.error('Error fetching papers', error);
-      alert('Failed to fetch papers.');
+      alert('Failed to fetch papers from API. Loading benchmark research literature.');
+      setResults(BENCHMARK_PAPERS);
+      localStorage.setItem('activeProjectPapers', JSON.stringify(BENCHMARK_PAPERS));
     } finally {
       setLoading(false);
     }
   };
 
   const handleSavePaper = async (paper) => {
-    if (!projectId) {
-      alert("Please select a project first.");
-      return;
-    }
     try {
       setSavedPaperIds(prev => new Set([...prev, paper._id || paper.openAlexId]));
     } catch (err) {
@@ -63,19 +92,24 @@ const Discovery = () => {
     }
   };
 
-  if (!projectId) {
+  if (!projectId && !project) {
     return (
       <GlassPanel className="text-center py-16 max-w-2xl mx-auto mt-10 bg-white border border-neutral-200">
         <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mx-auto mb-4 border border-neutral-200">
           <FolderOpen className="h-6 w-6 text-neutral-600" />
         </div>
         <h2 className="text-xl font-bold text-black mb-2">No Active Research Project</h2>
-        <p className="text-sm text-neutral-500 mb-6">
-          You must select or create a project workspace before querying academic literature databases.
+        <p className="text-sm text-neutral-500 mb-6 max-w-md mx-auto">
+          You can create a custom project from the Dashboard or immediately initialize an AI research workspace with benchmark literature.
         </p>
-        <GlassButton variant="primary" onClick={() => navigate('/app')}>
-          Go to Workspaces Dashboard
-        </GlassButton>
+        <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-3">
+          <GlassButton variant="primary" onClick={handleInitDemoWorkspace}>
+            Initialize AI Research Workspace
+          </GlassButton>
+          <GlassButton variant="secondary" onClick={() => navigate('/app')}>
+            Go to Workspaces Dashboard
+          </GlassButton>
+        </div>
       </GlassPanel>
     );
   }

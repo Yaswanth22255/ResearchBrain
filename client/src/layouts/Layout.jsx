@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { BookOpen, FolderOpen, Search, Lightbulb, CheckCircle, PenTool, Map, Settings, ChevronLeft } from 'lucide-react';
+import { BookOpen, FolderOpen, Search, Lightbulb, CheckCircle, PenTool, Map, Settings, ChevronLeft, Menu, X, ArrowLeft } from 'lucide-react';
 import api from '../services/api';
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeProject, setActiveProject] = useState(null);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Read active project from local storage
   useEffect(() => {
@@ -22,6 +23,11 @@ const Layout = () => {
     }
   }, [location.pathname]);
 
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setMobileSidebarOpen(false);
+  }, [location.pathname]);
+
   const navItems = [
     { name: 'Dashboard', path: '/app', icon: FolderOpen },
     { name: 'Discovery', path: '/app/discover', icon: Search },
@@ -33,18 +39,36 @@ const Layout = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#fafafa]">
+      {/* Mobile Backdrop */}
+      {mobileSidebarOpen && (
+        <div 
+          onClick={() => setMobileSidebarOpen(false)}
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs z-30 md:hidden"
+        />
+      )}
+
       {/* Sleek Monochrome Sidebar */}
-      <div className="w-64 flex-shrink-0 flex flex-col glass-panel !rounded-none !border-t-0 !border-b-0 !border-l-0 z-10 relative bg-white/90 border-r border-neutral-200">
-        <div className="h-16 flex items-center px-6 border-b border-neutral-200">
-          <div className="p-1.5 rounded-lg bg-black text-white mr-2.5">
-            <BookOpen className="h-4 w-4" />
-          </div>
-          <Link to="/" className="font-bold text-base tracking-tight text-neutral-900 hover:text-black transition-colors">
-            ResearchPro
+      <div className={`fixed inset-y-0 left-0 z-40 w-64 flex flex-col bg-white border-r border-neutral-200 transition-transform duration-200 ease-in-out md:static md:translate-x-0 ${
+        mobileSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+      }`}>
+        <div className="h-16 flex items-center justify-between px-6 border-b border-neutral-200">
+          <Link to="/" className="flex items-center group">
+            <div className="p-1.5 rounded-lg bg-black text-white mr-2.5 group-hover:bg-neutral-800 transition-colors">
+              <BookOpen className="h-4 w-4" />
+            </div>
+            <span className="font-bold text-base tracking-tight text-neutral-900 group-hover:text-black transition-colors">
+              ResearchPro
+            </span>
+            <span className="ml-2 text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-600 border border-neutral-200">
+              Academic
+            </span>
           </Link>
-          <span className="ml-2 text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-600 border border-neutral-200">
-            Academic
-          </span>
+          <button 
+            onClick={() => setMobileSidebarOpen(false)}
+            className="md:hidden text-neutral-500 hover:text-black p-1"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
         
         {activeProject && (
@@ -87,30 +111,53 @@ const Layout = () => {
           })}
         </nav>
         
-        <div className="p-3 border-t border-neutral-200">
-          <div className="px-3 py-2 text-xs text-neutral-500 font-medium flex items-center justify-between">
-            <span>Audit Level</span>
-            <span className="font-semibold text-neutral-800">Formal v2.1</span>
+        <div className="p-3 border-t border-neutral-200 space-y-1">
+          <Link 
+            to="/" 
+            className="flex items-center px-3 py-2 text-xs font-semibold text-neutral-600 hover:text-black hover:bg-neutral-100 rounded-lg transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 mr-2" />
+            Back to Public Home
+          </Link>
+          <div className="px-3 py-1.5 text-[11px] text-neutral-400 font-medium flex items-center justify-between">
+            <span>Audit Pipeline</span>
+            <span className="font-semibold text-neutral-700">Formal v2.1</span>
           </div>
         </div>
       </div>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 bg-transparent relative">
-        <header className="h-16 flex-shrink-0 glass-nav flex items-center justify-between px-8 z-10 border-b border-neutral-200">
+        <header className="h-16 flex-shrink-0 glass-nav flex items-center justify-between px-4 md:px-8 z-10 border-b border-neutral-200">
           <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setMobileSidebarOpen(true)}
+              className="md:hidden p-2 rounded-lg border border-neutral-300 text-neutral-700 hover:bg-neutral-100"
+              aria-label="Open navigation sidebar"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
             <h2 className="text-base font-bold text-neutral-900">
               {navItems.find(i => i.path === location.pathname)?.name || 'Workspace'}
             </h2>
-            <span className="text-neutral-300">/</span>
-            <span className="text-xs font-medium text-neutral-500">Evidence-Grounded Intelligence</span>
+            <span className="hidden sm:inline text-neutral-300">/</span>
+            <span className="hidden sm:inline text-xs font-medium text-neutral-500">
+              Evidence-Grounded Intelligence
+            </span>
           </div>
-          <div className="flex items-center space-x-4">
+          
+          <div className="flex items-center space-x-3 sm:space-x-4">
             <Link 
               to="/app/discover" 
               className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-50 transition-colors"
             >
-              Quick Search
+              Literature Search
+            </Link>
+            <Link 
+              to="/" 
+              className="text-xs font-medium text-neutral-600 hover:text-black hidden sm:inline transition-colors"
+            >
+              Home
             </Link>
             <div className="h-8 w-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs tracking-wider border border-black shadow-xs">
               RP
@@ -118,7 +165,7 @@ const Layout = () => {
           </div>
         </header>
         
-        <main className="flex-1 overflow-y-auto p-6 md:p-10 relative z-0">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-10 relative z-0">
           <Outlet />
         </main>
       </div>
